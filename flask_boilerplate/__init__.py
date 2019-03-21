@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, abort, make_response
 
 
 def create_app(test_config=None):
@@ -29,5 +29,16 @@ def create_app(test_config=None):
     @app.route('/number/<int:n>')
     def number_route(n):
         return f"Number: {n}"
+
+    @app.route('/method', methods=['GET', 'POST', 'PATCH', 'PUT', 'DELETE'])
+    def method_route():
+        return f"HTTP Method: {request.method}"
+
+    @app.route('/status')
+    def status_route():
+        code = request.args.get('c', 200)
+        response = make_response("", code)
+
+        return response
 
     return app
